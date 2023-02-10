@@ -1,0 +1,46 @@
+<div class="container">
+    <h1>Crear préstamo</h1>
+
+    <form #miFormulario="ngForm">
+        <mat-form-field>
+            <mat-label>Identificador</mat-label>
+            <input type="number" matInput placeholder="Identificador" name="id" disabled>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label> Cliente </mat-label>
+            <mat-select disableRipple [(ngModel)]="loan.client" name="client" required>
+                <mat-option *ngFor="let client of clients" [value]="client">{{client.name}}</mat-option>
+            </mat-select>
+            <mat-error>El cliente no puede estar vacía</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <mat-label>Título del juego</mat-label>
+            <mat-select disableRipple [(ngModel)]="loan.game" name="game" required>
+                <mat-option *ngFor="let game of games" [value]="game">{{game.title}}</mat-option>
+            </mat-select>
+            <mat-error>El juego no puede estar vacía</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Ingrese un rango de fechas</mat-label>
+            <mat-date-range-input [rangePicker]="picker" >
+              <input matStartDate placeholder="Fecha préstamo" [(ngModel)]="loan.dateStart" name="dateStart" required #dateStart="ngModel">
+              <input matEndDate placeholder="Fecha devolución" [(ngModel)]="loan.dateEnd" name="dateEnd" required #dateEnd="ngModel">
+            </mat-date-range-input>
+            <mat-hint>DD/MM/YYYY – DD/MM/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker ></mat-date-range-picker>
+            <mat-error *ngIf="dateStart.errors?.['required'] || dateEnd.errors?.['required']">Las fechas no pueden estar vacías</mat-error>
+            <mat-error *ngIf="dateEnd.errors?.['badDates']">La fecha de fin NO puede ser anterior a la fecha de inicio</mat-error>
+            <mat-error *ngIf="dateEnd.errors?.['incorrect']">El periodo de préstamo máximo debe ser de 14 días</mat-error>
+            <mat-error *ngIf="dateEnd.errors?.['msgError']">{{msgError}}</mat-error>
+          </mat-form-field>
+    </form>
+
+    <div class="buttons">
+        <button mat-stroked-button (click)="onClose()">Cerrar</button>
+        <button mat-flat-button color="primary" (click)="onSave()">Guardar</button>
+    </div>
+</div>
